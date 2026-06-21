@@ -2,13 +2,13 @@
 
 import { useRef } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, type Variants } from 'framer-motion';
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden:  { opacity: 0, y: 32 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' as const } },
 };
-const stagger = {
+const stagger: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.13, delayChildren: 0.2 } },
 };
