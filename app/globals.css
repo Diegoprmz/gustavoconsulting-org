@@ -1,26 +1,151 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-navy:       #1B2A4A;
+  --color-navy-deep:  #0F1C36;
+  --color-gold:       #C4922A;
+  --color-gold-light: #D4A843;
+  --color-green:      #3D6B50;
+  --color-cream:      #F8F4EE;
+  --color-charcoal:   #2C2C2C;
+
+  --font-serif: var(--font-playfair);
+  --font-sans:  var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-charcoal);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* Gold shimmer button */
+.btn-gold {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-gold);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 12px;
+  padding: 15px 36px;
+  display: inline-block;
+  transition: box-shadow 0.25s ease;
+}
+.btn-gold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.55s ease;
+}
+.btn-gold:hover::after { transform: translateX(100%); }
+.btn-gold:hover { box-shadow: 0 12px 32px rgba(196,146,42,0.35); }
+
+/* Ghost buttons */
+.btn-ghost-white {
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.85);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 14px 28px;
+  display: inline-block;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost-white:hover {
+  border-color: rgba(255,255,255,0.7);
+  color: #fff;
+}
+
+.btn-ghost-gold {
+  border: 1.5px solid var(--color-gold);
+  color: var(--color-gold);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 13px 26px;
+  display: inline-block;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-ghost-gold:hover {
+  background: var(--color-gold);
+  color: #fff;
+}
+
+/* Thin gold rule */
+.gold-rule {
+  width: 48px;
+  height: 1.5px;
+  background: linear-gradient(90deg, var(--color-gold), rgba(196,146,42,0.1));
+  border-radius: 2px;
+}
+
+/* Card hover border top */
+.initiative-card {
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: border-color 0.3s;
+}
+.initiative-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--color-gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+.initiative-card:hover::before { transform: scaleX(1); }
+.initiative-card:hover { border-color: rgba(255,255,255,0.15); }
+
+/* Scroll indicator line */
+@keyframes scroll-drop {
+  0%   { transform: scaleY(0); transform-origin: top; }
+  50%  { transform: scaleY(1); transform-origin: top; }
+  50.1%{ transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.scroll-line {
+  width: 1px;
+  height: 48px;
+  background: rgba(196,146,42,0.5);
+  animation: scroll-drop 2s ease-in-out infinite;
+}
+
+/* Subtle grid pattern for Hero */
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Paragraph with gold left accent */
+.quote-border {
+  border-left: 2px solid var(--color-gold);
+  padding-left: 20px;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+/* Institutions scroll strip */
+.inst-strip {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+.inst-strip::-webkit-scrollbar { display: none; }
