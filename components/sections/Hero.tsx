@@ -2,207 +2,206 @@
 
 import { useRef } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, type Variants } from 'framer-motion';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { useMagnetic } from '@/components/hooks/useMagnetic';
 
-const fadeUp: Variants = {
-  hidden:  { opacity: 0, y: 32 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' as const } },
-};
-const stagger: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.13, delayChildren: 0.2 } },
-};
+gsap.registerPlugin(useGSAP);
 
 export default function Hero() {
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
-  const photoY      = useTransform(scrollYProgress, [0, 1], ['0%', '-14%']);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.55], [1, 0]);
-  const textY       = useTransform(scrollYProgress, [0, 0.55], ['0%', '-8%']);
+  const scope = useRef<HTMLElement>(null);
+  const photoRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useMagnetic<HTMLAnchorElement>(0.25);
+
+  useGSAP(() => {
+    const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+
+    tl.fromTo('.masthead-bar', { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0)
+      .fromTo(photoRef.current, { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 1.1 }, 0.15)
+      .fromTo('.hero-headline .reveal-line', { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1, stagger: 0.1 }, 0.25)
+      .fromTo('.hero-index', { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.9 }, '-=0.5')
+      .fromTo('.hero-cta', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.4')
+      .fromTo('.hero-clip', { opacity: 0, y: 16, rotate: -4 }, { opacity: 1, y: 0, rotate: -2, duration: 0.7 }, '-=0.3')
+      .fromTo('.hero-badge', { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.4');
+  }, { scope });
 
   return (
-    <section
-      ref={ref}
-      id="misión"
-      className="hero-grid"
-      style={{
-        position: 'relative',
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #0F1C36 0%, #1B2A4A 55%, #223358 100%)',
-        overflow: 'hidden',
-        display: 'flex',
-      }}
-    >
-      {/* Gold glow — upper right */}
-      <div style={{
-        position: 'absolute', top: '5%', right: '8%',
-        width: '500px', height: '500px',
-        background: 'radial-gradient(ellipse, rgba(196,146,42,0.14) 0%, transparent 68%)',
-        animation: 'glow-pulse 5s ease-in-out infinite',
-        pointerEvents: 'none',
-      }} />
-      {/* Green glow — lower left */}
-      <div style={{
-        position: 'absolute', bottom: '8%', left: '2%',
-        width: '380px', height: '380px',
-        background: 'radial-gradient(ellipse, rgba(61,107,80,0.18) 0%, transparent 68%)',
-        animation: 'glow-pulse 6s ease-in-out infinite 1s',
-        pointerEvents: 'none',
-      }} />
+    <section ref={scope} id="misión" style={{ position: 'relative', background: '#F1E9DA', paddingTop: '28px' }}>
 
-      {/* ── Desktop ── */}
-      <div className="hidden md:flex w-full" style={{ minHeight: '100vh' }}>
-
-        {/* Left — 60% */}
-        <motion.div
-          style={{ opacity: textOpacity, y: textY, width: '60%', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '120px 64px 80px 80px', position: 'relative', zIndex: 2 }}
-        >
-          <motion.div variants={stagger} initial="hidden" animate="visible">
-
-            {/* Eyebrow */}
-            <motion.div variants={fadeUp} style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '32px' }}>
-              <div style={{ width: '36px', height: '1.5px', background: '#C4922A' }} />
-              <span style={{ fontFamily: 'var(--font-inter)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#C4922A' }}>
-                Fundación Gustavo Consulting
-              </span>
-            </motion.div>
-
-            {/* Headline */}
-            <motion.h1
-              variants={fadeUp}
-              style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(48px, 5.5vw, 84px)', lineHeight: 1.05, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', marginBottom: '28px' }}
-            >
-              Educación y liderazgo<br />
-              al servicio de<br />
-              <em style={{ color: '#C4922A', fontStyle: 'italic', fontWeight: 400 }}>la sociedad</em>
-            </motion.h1>
-
-            {/* Body */}
-            <motion.p
-              variants={fadeUp}
-              style={{ fontFamily: 'var(--font-inter)', fontSize: '16px', fontWeight: 300, lineHeight: 1.75, color: 'rgba(255,255,255,0.5)', maxWidth: '460px', marginBottom: '48px' }}
-            >
-              Treinta años de experiencia directiva convertidos en una misión social. Conocimiento, liderazgo y educación al servicio de México y América Latina.
-            </motion.p>
-
-            {/* CTAs */}
-            <motion.div variants={fadeUp} style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
-              <motion.a
-                href="#iniciativas"
-                className="btn-gold"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                style={{ textDecoration: 'none' }}
-              >
-                Conoce la fundación
-              </motion.a>
-              <motion.a
-                href="#iniciativas"
-                className="btn-ghost-white"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                style={{ textDecoration: 'none' }}
-              >
-                Ver iniciativas →
-              </motion.a>
-            </motion.div>
-
-            {/* Scroll indicator */}
-            <motion.div
-              variants={fadeUp}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '10px', marginTop: '80px' }}
-            >
-              <span style={{ fontFamily: 'var(--font-inter)', fontSize: '9px', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', writingMode: 'vertical-rl' }}>
-                Scroll
-              </span>
-              <div className="scroll-line" />
-            </motion.div>
-          </motion.div>
-        </motion.div>
-
-        {/* Right — 40% — photo */}
-        <div style={{ width: '40%', position: 'relative', overflow: 'hidden' }}>
-          <motion.div style={{ y: photoY, position: 'absolute', inset: 0, bottom: '-18%', zIndex: 2 }}>
-            <Image
-              src="/assets/gustavo.jpeg"
-              alt="Gustavo Martínez Pellón — Fundador"
-              fill
-              className="object-cover object-center"
-              priority
-              sizes="40vw"
-            />
-            {/* Gradient overlay left */}
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(27,42,74,0.6) 0%, transparent 40%)', zIndex: 3 }} />
-            {/* Gradient overlay bottom */}
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '45%', background: 'linear-gradient(to top, rgba(15,28,54,0.95) 0%, transparent 100%)', zIndex: 3 }} />
-          </motion.div>
-
-          {/* Pull-quote */}
-          <div style={{ position: 'absolute', bottom: '48px', left: '24px', right: '24px', zIndex: 4 }}>
-            <div style={{ width: '32px', height: '1px', background: 'rgba(196,146,42,0.6)', marginBottom: '12px' }} />
-            <p style={{ fontFamily: 'var(--font-playfair)', fontStyle: 'italic', fontSize: '15px', lineHeight: 1.6, color: 'rgba(255,255,255,0.85)' }}>
-              "Lo que he dedicado toda la vida, ahora al servicio de la sociedad."
-            </p>
-            <p style={{ fontFamily: 'var(--font-inter)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#C4922A', marginTop: '10px' }}>
-              — Gustavo Martínez Pellón
-            </p>
-          </div>
-
-          {/* Vertical rule left edge */}
-          <div style={{ position: 'absolute', left: 0, top: '15%', bottom: '15%', width: '1px', background: 'linear-gradient(to bottom, transparent, rgba(196,146,42,0.25), transparent)', zIndex: 5 }} />
+      {/* Masthead strip */}
+      <div className="masthead-bar px-6 md:px-20" style={{
+        borderTop: '1px solid rgba(33,26,20,0.18)',
+        borderBottom: '1px solid rgba(33,26,20,0.18)',
+        paddingTop: '11px',
+        paddingBottom: '11px',
+        marginBottom: '40px',
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(33,26,20,0.72)' }}>
+          <span>Fundación Gustavo Consulting</span>
+          <span>México — LATAM</span>
+          <span>Educación · Liderazgo · Impacto</span>
         </div>
       </div>
 
-      {/* ── Mobile ── */}
-      <div className="flex md:hidden flex-col w-full" style={{ minHeight: '100dvh' }}>
-        {/* Photo top half */}
-        <div style={{ position: 'relative', height: '50vh', overflow: 'hidden', flexShrink: 0 }}>
-          <Image
-            src="/assets/gustavo.jpeg"
-            alt="Gustavo Martínez Pellón"
-            fill
-            className="object-cover object-top"
-            priority
-            sizes="100vw"
-          />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(27,42,74,0.3) 0%, rgba(15,28,54,0.9) 100%)', zIndex: 2 }} />
-        </div>
+      <div className="grid md:grid-cols-12 px-6 md:px-20" style={{ gap: '32px', alignItems: 'stretch', paddingBottom: '64px' }}>
 
-        {/* Text */}
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          animate="visible"
-          style={{ padding: '36px 24px 60px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
-        >
-          <motion.div variants={fadeUp} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
-            <div style={{ width: '28px', height: '1.5px', background: '#C4922A' }} />
-            <span style={{ fontFamily: 'var(--font-inter)', fontSize: '9px', fontWeight: 600, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#C4922A' }}>
-              Fundación Gustavo Consulting
+        {/* Left — mixed-scale headline + CTA (7 of 12 cols) — stretched + space-between so the
+            CTA row anchors to the photo's bottom edge instead of leaving a blank gap below it */}
+        <div className="md:col-span-7" style={{ position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <span aria-hidden className="hero-index" style={{
+            fontFamily: 'var(--font-mono)',
+            fontWeight: 600,
+            fontSize: 'clamp(80px, 11vw, 176px)',
+            lineHeight: 1,
+            color: 'rgba(33,26,20,0.06)',
+            position: 'absolute',
+            top: '-40px',
+            left: '-10px',
+            zIndex: 0,
+            userSelect: 'none',
+          }}>
+            01
+          </span>
+
+          <h1 className="hero-headline" style={{ position: 'relative', zIndex: 1, marginBottom: '44px' }}>
+            <span style={{ display: 'block', overflow: 'hidden', paddingBottom: '0.12em' }}>
+              <span className="reveal-line" style={{
+                display: 'block', opacity: 0,
+                fontFamily: 'var(--font-serif)', fontWeight: 500,
+                fontSize: 'clamp(32px, 3.6vw, 52px)', color: '#211A14',
+                lineHeight: 1.2, letterSpacing: '-0.01em',
+              }}>
+                Educación y
+              </span>
             </span>
-          </motion.div>
+            <span style={{ display: 'block', overflow: 'hidden', paddingBottom: '0.12em' }}>
+              <span className="reveal-line" style={{
+                display: 'block', opacity: 0,
+                fontFamily: 'var(--font-serif)', fontWeight: 700,
+                fontSize: 'clamp(44px, 6.4vw, 100px)', color: '#A83E23',
+                lineHeight: 1.15, letterSpacing: '-0.02em',
+              }}>
+                liderazgo
+              </span>
+            </span>
+            <span style={{ display: 'block', overflow: 'hidden', paddingBottom: '0.12em' }}>
+              <span className="reveal-line" style={{
+                display: 'block', opacity: 0,
+                fontFamily: 'var(--font-serif)', fontWeight: 500,
+                fontSize: 'clamp(28px, 3.2vw, 46px)', color: '#211A14',
+                lineHeight: 1.25, letterSpacing: '-0.01em',
+              }}>
+                al servicio de la sociedad
+              </span>
+            </span>
+          </h1>
 
-          <motion.h1
-            variants={fadeUp}
-            style={{ fontFamily: 'var(--font-playfair)', fontSize: '42px', lineHeight: 1.08, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', marginBottom: '20px' }}
-          >
-            Educación y liderazgo al servicio de{' '}
-            <em style={{ color: '#C4922A', fontStyle: 'italic', fontWeight: 400 }}>la sociedad</em>
-          </motion.h1>
-
-          <motion.p variants={fadeUp} style={{ fontFamily: 'var(--font-inter)', fontSize: '14px', fontWeight: 300, lineHeight: 1.7, color: 'rgba(255,255,255,0.55)', marginBottom: '32px' }}>
-            Treinta años de experiencia directiva convertidos en una misión social.
-          </motion.p>
-
-          <motion.div variants={fadeUp} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <a href="#iniciativas" className="btn-gold" style={{ textDecoration: 'none', textAlign: 'center' }}>
+          <div className="hero-cta" style={{ display: 'flex', gap: '28px', alignItems: 'center', flexWrap: 'wrap', opacity: 0 }}>
+            <a ref={ctaRef} href="#iniciativas" className="btn-solid" style={{ textDecoration: 'none', willChange: 'transform' }}>
               Conoce la fundación
             </a>
-            <a href="#iniciativas" className="btn-ghost-white" style={{ textDecoration: 'none', textAlign: 'center' }}>
+            <a
+              href="#iniciativas"
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '12px',
+                letterSpacing: '0.04em',
+                color: 'rgba(33,26,20,0.55)',
+                textDecoration: 'none',
+                borderBottom: '1px solid rgba(33,26,20,0.2)',
+                paddingBottom: '2px',
+                transition: 'color 0.2s, border-color 0.2s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#A83E23'; e.currentTarget.style.borderColor = '#A83E23'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(33,26,20,0.55)'; e.currentTarget.style.borderColor = 'rgba(33,26,20,0.2)'; }}
+            >
               Ver iniciativas →
             </a>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
+
+        {/* Right — duotone framed portrait (5 of 12 cols) */}
+        <div className="md:col-span-5" style={{ position: 'relative' }}>
+          <div
+            ref={photoRef}
+            style={{
+              position: 'relative',
+              aspectRatio: '4 / 5',
+              border: '1px solid #211A14',
+              overflow: 'hidden',
+              background: '#211A14',
+            }}
+          >
+            <Image
+              src="/assets/gustavo.jpeg"
+              alt="Gustavo Martínez Pellón"
+              fill
+              priority
+              sizes="(min-width: 768px) 40vw, 90vw"
+              style={{ objectFit: 'cover', objectPosition: 'center 22%', filter: 'grayscale(1) contrast(1.08)' }}
+            />
+            <div aria-hidden style={{ position: 'absolute', inset: 0, background: '#A83E23', mixBlendMode: 'multiply', opacity: 0.28 }} />
+            <div aria-hidden style={{ position: 'absolute', inset: 0, background: '#211A14', mixBlendMode: 'multiply', opacity: 0.15 }} />
+          </div>
+
+          {/* Credibility badge, overlapping the top-right of the frame */}
+          <div className="hero-badge" style={{
+            position: 'absolute',
+            top: '-16px',
+            right: '-16px',
+            background: '#A83E23',
+            padding: '10px 16px',
+            rotate: '2deg',
+            boxShadow: '4px 4px 0 rgba(33,26,20,0.18)',
+            opacity: 0,
+          }}>
+            <p style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '10px',
+              fontWeight: 600,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: '#F1E9DA',
+              whiteSpace: 'nowrap',
+            }}>
+              Autor · Customer Centricity
+            </p>
+          </div>
+
+          {/* Clipped pull-quote, overlapping the frame like a cutout */}
+          <div className="hero-clip" style={{
+            position: 'absolute',
+            left: '-32px',
+            bottom: '-28px',
+            maxWidth: '230px',
+            background: '#F1E9DA',
+            border: '1px solid #211A14',
+            padding: '18px 20px',
+            transform: 'rotate(-2deg)',
+            boxShadow: '6px 6px 0 rgba(33,26,20,0.08)',
+          }}>
+            <p style={{
+              fontFamily: 'var(--font-serif)',
+              fontWeight: 500,
+              fontSize: '14px',
+              lineHeight: 1.5,
+              color: '#211A14',
+            }}>
+              "Lo que he dedicado toda la vida, ahora al servicio de la sociedad."
+            </p>
+            <p style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '9px',
+              fontWeight: 500,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: '#A83E23',
+              marginTop: '10px',
+            }}>
+              — G. Martínez Pellón
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );

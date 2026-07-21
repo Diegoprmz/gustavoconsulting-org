@@ -34,10 +34,10 @@ const LATAM_IDS = new Set([
 
 function getFill(id: string) {
   const p = PRESENCE[id];
-  if (!p) return LATAM_IDS.has(id) ? '#1E3352' : '#252F3E';
-  if (p.highlight === 'primary') return '#C4922A';
-  if (p.highlight === 'active')  return '#2A5080';
-  return '#243B5E';
+  if (!p) return LATAM_IDS.has(id) ? '#3A2F24' : '#2B221A';
+  if (p.highlight === 'primary') return '#A83E23';
+  if (p.highlight === 'active')  return '#5C7A5A';
+  return '#3A2F24';
 }
 
 export default function LatamMap() {
@@ -65,7 +65,7 @@ export default function LatamMap() {
                     strokeWidth={0.5}
                     style={{
                       default: { outline: 'none', transition: 'fill 0.2s' },
-                      hover:   { outline: 'none', fill: presence ? (presence.highlight === 'primary' ? '#D4A843' : '#3A6EA8') : '#2A3A50', cursor: presence ? 'pointer' : 'default' },
+                      hover:   { outline: 'none', fill: presence ? (presence.highlight === 'primary' ? '#7A3018' : '#7C8F79') : '#3A2F24', cursor: presence ? 'pointer' : 'default' },
                       pressed: { outline: 'none' },
                     }}
                     onMouseEnter={(e: React.MouseEvent<SVGPathElement>) => {
@@ -85,16 +85,16 @@ export default function LatamMap() {
             <Marker key={city.name} coordinates={city.coords}>
               <circle
                 r={city.main ? 5 : 3}
-                fill={city.main ? '#C4922A' : 'rgba(196,146,42,0.7)'}
-                stroke="#fff"
+                fill={city.main ? '#A83E23' : 'rgba(168,62,35,0.7)'}
+                stroke="#F1E9DA"
                 strokeWidth={city.main ? 1.5 : 1}
-                style={{ filter: city.main ? 'drop-shadow(0 0 6px rgba(196,146,42,0.6))' : 'none' }}
+                style={{ filter: city.main ? 'drop-shadow(0 0 6px rgba(168,62,35,0.6))' : 'none' }}
               />
               {city.main && (
                 <text
                   textAnchor="middle"
                   y={-10}
-                  style={{ fontFamily: 'var(--font-inter)', fontSize: '7px', fill: 'rgba(255,255,255,0.75)', letterSpacing: '0.05em' }}
+                  style={{ fontFamily: 'var(--font-mono)', fontSize: '7px', fill: 'rgba(241,233,218,0.75)', letterSpacing: '0.05em' }}
                 >
                   {city.name}
                 </text>
@@ -111,18 +111,18 @@ export default function LatamMap() {
             position: 'absolute',
             left: tooltip.x + 12,
             top: tooltip.y - 12,
-            background: 'rgba(15,28,54,0.96)',
-            border: '1px solid rgba(196,146,42,0.3)',
+            background: 'rgba(33,26,20,0.96)',
+            border: '1px solid rgba(168,62,35,0.35)',
             padding: '8px 14px',
             pointerEvents: 'none',
             backdropFilter: 'blur(8px)',
             zIndex: 10,
           }}
         >
-          <p style={{ fontFamily: 'var(--font-inter)', fontSize: '11px', fontWeight: 600, color: '#fff', marginBottom: '2px' }}>
+          <p style={{ fontFamily: 'var(--font-inter)', fontSize: '11px', fontWeight: 600, color: '#F1E9DA', marginBottom: '2px' }}>
             {tooltip.name}
           </p>
-          <p style={{ fontFamily: 'var(--font-inter)', fontSize: '10px', color: '#C4922A' }}>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#A83E23' }}>
             {tooltip.institutions} institución{tooltip.institutions > 1 ? 'es' : ''}
           </p>
         </div>
