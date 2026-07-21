@@ -1,96 +1,144 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import MaskLine from '@/components/ui/MaskLine';
 
-const credentials = [
-  'Anáhuac', 'EGADE', 'ITAM', 'Tec de Monterrey',
-  'UNAM', 'Ibero', 'La Salle', 'UNITEC', 'UVM',
-  'UAB', 'UFM', 'USIL', '+15 instituciones',
-];
-
-function AnimSection({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 36 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.75, ease: 'easeOut', delay }}
-    >
-      {children}
-    </motion.div>
-  );
-}
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export default function Fundador() {
-  return (
-    <section
-      id="trayectoria"
-      style={{ background: '#F8F4EE', padding: '120px 0' }}
-    >
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 40px' }}>
-        <div className="grid md:grid-cols-2 gap-16 md:gap-24 items-start">
+  const scope = useRef<HTMLElement>(null);
 
-          {/* Left — name + credentials */}
-          <AnimSection>
-            <p style={{ fontFamily: 'var(--font-inter)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.24em', textTransform: 'uppercase', color: '#C4922A', marginBottom: '28px' }}>
-              El fundador
-            </p>
-            <h2 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(52px, 6vw, 88px)', fontWeight: 700, lineHeight: 0.9, color: '#1B2A4A', letterSpacing: '-0.03em', marginBottom: '40px' }}>
-              Gustavo<br />
-              <span style={{ fontWeight: 400, fontStyle: 'italic' }}>Martínez</span><br />
-              Pellón
+  useGSAP(() => {
+    const trigger = { trigger: scope.current, start: 'top 78%' };
+
+    gsap.timeline({ scrollTrigger: trigger, defaults: { ease: 'expo.out' } })
+      .fromTo('.fundador-name .reveal-line', { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.95, stagger: 0.09 })
+      .fromTo('.fundador-role', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.45');
+
+    gsap.utils.toArray<HTMLElement>('.fundador-para').forEach((el, i) => {
+      gsap.fromTo(
+        el,
+        { opacity: 0, y: 22 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          delay: i * 0.12,
+          scrollTrigger: { trigger: el, start: 'top 85%' },
+        }
+      );
+      const rule = el.querySelector('.para-rule');
+      if (rule) {
+        gsap.fromTo(
+          rule,
+          { scaleY: 0 },
+          { scaleY: 1, duration: 0.7, ease: 'power2.out', delay: i * 0.12 + 0.1, scrollTrigger: { trigger: el, start: 'top 85%' } }
+        );
+      }
+    });
+
+    // Left column drifts slower than the right — subtle depth between the two grid tracks.
+    // Desktop only: a scrub tween recalculates on every scroll pixel, which is real
+    // continuous work best avoided on mobile where scroll now runs fully native.
+    const mm = gsap.matchMedia();
+    mm.add('(min-width: 768px)', () => {
+      gsap.to('.fundador-name-col', {
+        y: -36,
+        ease: 'none',
+        scrollTrigger: { trigger: scope.current, start: 'top bottom', end: 'bottom top', scrub: 1 },
+      });
+    });
+  }, { scope });
+
+  return (
+    <section ref={scope} id="trayectoria" style={{ background: '#F1E9DA', padding: '100px 0 90px', borderTop: '1px solid rgba(33,26,20,0.12)' }}>
+      <div className="px-6 md:px-20" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div className="grid md:grid-cols-2 gap-20 md:gap-32 items-start">
+
+          {/* Left — name as typographic statement */}
+          <div className="fundador-name-col md:-ml-8">
+            <h2 className="fundador-name" style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: 'clamp(64px, 8vw, 116px)',
+              fontWeight: 700,
+              lineHeight: 0.88,
+              color: '#211A14',
+              letterSpacing: '-0.03em',
+              marginBottom: '40px',
+            }}>
+              <MaskLine>Gustavo</MaskLine>
+              <MaskLine>Martínez</MaskLine>
+              <MaskLine>Pellón</MaskLine>
             </h2>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-              {credentials.map((c) => (
-                <span
-                  key={c}
-                  style={{
-                    fontFamily: 'var(--font-inter)',
-                    fontSize: '10px',
-                    fontWeight: 500,
-                    letterSpacing: '0.06em',
-                    color: '#1B2A4A',
-                    border: '1px solid rgba(27,42,74,0.25)',
-                    borderRadius: '2px',
-                    padding: '5px 12px',
-                  }}
-                >
-                  {c}
-                </span>
-              ))}
+            <p className="fundador-role" style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '10px',
+              fontWeight: 600,
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              color: '#211A14',
+              opacity: 0,
+            }}>
+              Catedrático · Consultor · Consejero
+            </p>
+          </div>
+
+          {/* Right — bio paragraphs */}
+          <div style={{ paddingTop: '8px' }}>
+            <div className="fundador-para" style={{ marginBottom: '36px', position: 'relative', paddingLeft: '20px', opacity: 0 }}>
+              <span className="para-rule" style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '2px', background: 'rgba(168,62,35,0.45)', transformOrigin: 'top', transform: 'scaleY(0)' }} />
+              <p style={{
+                fontFamily: 'var(--font-inter)',
+                fontSize: '16px',
+                fontWeight: 300,
+                lineHeight: 1.85,
+                color: 'rgba(33,26,20,0.72)',
+              }}>
+                Durante más de tres décadas he tenido el privilegio de acompañar a empresas, ejecutivos y estudiantes en sus procesos de transformación estratégica. He impartido cátedra en más de 21 universidades en México y América Latina, y he asesorado a organizaciones de todos los tamaños — desde HSBC y Ford hasta empresas familiares en crecimiento.
+              </p>
             </div>
-          </AnimSection>
 
-          {/* Right — statement paragraphs */}
-          <AnimSection delay={0.15}>
-            <div style={{ paddingTop: '8px' }}>
-              <div className="quote-border" style={{ marginBottom: '36px' }}>
-                <p style={{ fontFamily: 'var(--font-inter)', fontSize: '16px', fontWeight: 300, lineHeight: 1.8, color: '#2C2C2C' }}>
-                  Durante más de tres décadas he tenido el privilegio de acompañar a empresas, ejecutivos y estudiantes en sus procesos de transformación estratégica. He impartido cátedra en más de 21 universidades en México y América Latina, y he asesorado a organizaciones de todos los tamaños — desde HSBC y Ford hasta empresas familiares en crecimiento.
-                </p>
-              </div>
-
-              <div className="quote-border">
-                <p style={{ fontFamily: 'var(--font-inter)', fontSize: '16px', fontWeight: 300, lineHeight: 1.8, color: '#2C2C2C' }}>
-                  Esta fundación nace de una convicción profunda: el conocimiento tiene su mayor valor cuando se pone al servicio de la sociedad, no solo de las corporaciones. Fundación Gustavo Consulting es el vehículo para llevar educación de calidad, mentoría genuina y liderazgo con impacto social a quienes más lo necesitan.
-                </p>
-              </div>
-
-              <div style={{ marginTop: '48px', paddingTop: '32px', borderTop: '1px solid rgba(27,42,74,0.1)' }}>
-                <p style={{ fontFamily: 'var(--font-inter)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(27,42,74,0.4)', marginBottom: '4px' }}>
-                  Autor
-                </p>
-                <p style={{ fontFamily: 'var(--font-playfair)', fontSize: '18px', fontStyle: 'italic', color: '#1B2A4A' }}>
-                  Customer Centricity — La estrategia que pone al cliente en el centro
-                </p>
-              </div>
+            <div className="fundador-para" style={{ position: 'relative', paddingLeft: '20px', opacity: 0 }}>
+              <span className="para-rule" style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '2px', background: 'rgba(168,62,35,0.45)', transformOrigin: 'top', transform: 'scaleY(0)' }} />
+              <p style={{
+                fontFamily: 'var(--font-inter)',
+                fontSize: '16px',
+                fontWeight: 300,
+                lineHeight: 1.85,
+                color: 'rgba(33,26,20,0.72)',
+              }}>
+                Esta fundación nace de una convicción profunda: el conocimiento tiene su mayor valor cuando se pone al servicio de la sociedad, no solo de las corporaciones. Fundación Gustavo Consulting es el vehículo para llevar educación de calidad, mentoría genuina y liderazgo con impacto social a quienes más lo necesitan.
+              </p>
             </div>
-          </AnimSection>
+
+            <div className="fundador-para" style={{ marginTop: '48px', paddingTop: '32px', borderTop: '1px solid rgba(33,26,20,0.12)', opacity: 0 }}>
+              <p style={{
+                fontFamily: 'var(--font-inter)',
+                fontSize: '10px',
+                fontWeight: 600,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: 'rgba(33,26,20,0.4)',
+                marginBottom: '6px',
+              }}>
+                Autor
+              </p>
+              <p style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: '18px',
+                fontWeight: 400,
+                color: '#211A14',
+                lineHeight: 1.4,
+              }}>
+                Customer Centricity — La estrategia que pone al cliente en el centro
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

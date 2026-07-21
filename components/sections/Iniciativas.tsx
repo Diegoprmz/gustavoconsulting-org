@@ -1,129 +1,153 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import MaskLine from '@/components/ui/MaskLine';
 
-const cards = [
+gsap.registerPlugin(useGSAP, ScrollTrigger);
+
+const items = [
   {
     num: '01',
     title: 'Formación y educación',
     desc: 'Programas, conferencias, talleres y recursos educativos diseñados para elevar el nivel del liderazgo en México y LATAM.',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4922A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 3L1 9l11 6 11-6-11-6zM1 9v6M5 11v6c0 1.5 3 3 7 3s7-1.5 7-3v-6"/>
-      </svg>
-    ),
   },
   {
     num: '02',
     title: 'Mentoría y talento',
     desc: 'Apoyo personalizado a estudiantes, jóvenes profesionistas y futuros líderes que buscan crecer con propósito.',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4922A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="7" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/>
-        <path d="M16 11a4 4 0 010 5.2"/>
-      </svg>
-    ),
   },
   {
     num: '03',
     title: 'Liderazgo con impacto',
     desc: 'Promoción de líderes comprometidos con sus comunidades, capaces de generar cambio real y sostenible.',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4922A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 17l4-4 4 4 4-6 4 2"/><circle cx="19" cy="7" r="2"/>
-      </svg>
-    ),
   },
   {
     num: '04',
     title: 'Conocimiento común',
     desc: 'Publicaciones, investigaciones e iniciativas de valor social que democratizan el acceso al conocimiento estratégico.',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4922A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
-      </svg>
-    ),
   },
 ];
 
-function Card({ card, delay }: { card: typeof cards[0]; delay: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, ease: 'easeOut', delay }}
-      className="initiative-card"
-      style={{ padding: '40px 36px 36px', position: 'relative', overflow: 'hidden', cursor: 'default' }}
-    >
-      {/* Ghost number */}
-      <span style={{
-        position: 'absolute', top: '-12px', right: '16px',
-        fontFamily: 'var(--font-playfair)', fontSize: '120px', fontWeight: 800,
-        color: 'rgba(255,255,255,0.035)', lineHeight: 1, userSelect: 'none',
-        pointerEvents: 'none',
-      }}>
-        {card.num}
-      </span>
-
-      {/* Icon box */}
-      <div style={{
-        width: '48px', height: '48px',
-        border: '1px solid rgba(196,146,42,0.4)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        marginBottom: '28px',
-      }}>
-        {card.icon}
-      </div>
-
-      <h3 style={{ fontFamily: 'var(--font-playfair)', fontSize: '22px', fontWeight: 600, color: '#fff', lineHeight: 1.25, marginBottom: '14px' }}>
-        {card.title}
-      </h3>
-      <p style={{ fontFamily: 'var(--font-inter)', fontSize: '14px', fontWeight: 300, lineHeight: 1.75, color: 'rgba(255,255,255,0.55)', marginBottom: '24px' }}>
-        {card.desc}
-      </p>
-      <a href="#contacto" style={{ fontFamily: 'var(--font-inter)', fontSize: '12px', fontWeight: 500, color: '#C4922A', textDecoration: 'none', letterSpacing: '0.06em', transition: 'letter-spacing 0.2s' }}>
-        Conocer más →
-      </a>
-    </motion.div>
-  );
-}
-
 export default function Iniciativas() {
-  const titleRef = useRef<HTMLDivElement>(null);
-  const titleInView = useInView(titleRef, { once: true, margin: '-60px' });
+  const scope = useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    gsap.fromTo(
+      '.iniciativas-title .reveal-line',
+      { yPercent: 110, opacity: 0 },
+      {
+        yPercent: 0,
+        opacity: 1,
+        duration: 1,
+        ease: 'expo.out',
+        stagger: 0.09,
+        scrollTrigger: { trigger: scope.current, start: 'top 75%' },
+      }
+    );
+
+    gsap.utils.toArray<HTMLElement>('.iniciativa-row').forEach((row) => {
+      const tl = gsap.timeline({ scrollTrigger: { trigger: row, start: 'top 88%' } });
+      tl.fromTo(row.querySelector('.row-rule'), { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: 'power3.out' })
+        .fromTo(row.querySelector('.row-num'), { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.6 }, '-=0.5')
+        .fromTo(row.querySelector('.row-body'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.4');
+    });
+  }, { scope });
 
   return (
-    <section id="iniciativas" style={{ background: '#1B2A4A', padding: '120px 0' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 40px' }}>
+    <section ref={scope} id="iniciativas" style={{ background: '#211A14', padding: '100px 0' }}>
+      <div className="px-6 md:px-20" style={{ maxWidth: '1200px', margin: '0 auto' }}>
 
-        <motion.div
-          ref={titleRef}
-          initial={{ opacity: 0, y: 28 }}
-          animate={titleInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
-          style={{ textAlign: 'center', marginBottom: '72px' }}
-        >
-          <p style={{ fontFamily: 'var(--font-inter)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.24em', textTransform: 'uppercase', color: '#C4922A', marginBottom: '16px' }}>
-            Cuatro pilares
-          </p>
-          <h2 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 700, color: '#fff', lineHeight: 1.15, maxWidth: '600px', margin: '0 auto' }}>
-            Para transformar la sociedad
+        {/* Header — offset right, breaks the left-aligned rhythm of the section around it */}
+        <div style={{ marginBottom: '64px', marginLeft: 'auto', maxWidth: '640px', textAlign: 'right' }}>
+          <h2 className="iniciativas-title" style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: 'clamp(40px, 5vw, 76px)',
+            fontWeight: 600,
+            lineHeight: 1.02,
+            color: '#F1E9DA',
+            letterSpacing: '-0.02em',
+          }}>
+            <MaskLine>Cuatro frentes</MaskLine>
+            <MaskLine>de trabajo</MaskLine>
           </h2>
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 gap-0" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
-          {cards.map((card, i) => (
-            <div key={card.num} style={{ borderRight: i % 2 === 0 ? '1px solid rgba(255,255,255,0.08)' : 'none', borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.08)' : 'none' }}>
-              <Card card={card} delay={i * 0.1} />
-            </div>
-          ))}
         </div>
+
+        {/* Numbered editorial rows — huge mono numerals, alternating indent */}
+        {items.map((item, i) => (
+          <div
+            key={item.num}
+            className={`iniciativa-row group grid grid-cols-1 md:grid-cols-[0.9fr_1.4fr] gap-3 md:gap-12 py-7 md:py-11 ${i % 2 !== 0 ? 'md:pl-[8%]' : ''}`}
+            style={{
+              position: 'relative',
+              borderBottom: i === items.length - 1 ? '1px solid rgba(241,233,218,0.08)' : 'none',
+              transition: 'padding-left 0.4s cubic-bezier(0.65,0,0.35,1)',
+              cursor: 'default',
+            }}
+            onMouseEnter={e => { if (window.innerWidth >= 768) e.currentTarget.style.paddingLeft = i % 2 === 0 ? '16px' : `calc(8% + 16px)`; }}
+            onMouseLeave={e => { e.currentTarget.style.paddingLeft = ''; }}
+          >
+            <span
+              className="row-rule"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '1px',
+                background: 'rgba(241,233,218,0.08)',
+                transform: 'scaleX(0)',
+                transformOrigin: 'left',
+              }}
+            />
+
+            <span className="row-num" style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 'clamp(40px, 5vw, 72px)',
+              fontWeight: 600,
+              letterSpacing: '-0.02em',
+              color: 'rgba(241,233,218,0.14)',
+              lineHeight: 1,
+            }}>
+              {item.num}
+            </span>
+
+            <div className="row-body">
+              <h3
+                className="row-title"
+                style={{
+                  fontFamily: 'var(--font-serif)',
+                  fontSize: 'clamp(22px, 2.6vw, 34px)',
+                  fontWeight: 600,
+                  color: '#F1E9DA',
+                  marginBottom: '12px',
+                  lineHeight: 1.15,
+                  transition: 'color 0.4s',
+                }}
+              >
+                {item.title}
+              </h3>
+              <p style={{
+                fontFamily: 'var(--font-inter)',
+                fontSize: '14px',
+                fontWeight: 300,
+                lineHeight: 1.82,
+                color: 'rgba(241,233,218,0.45)',
+                maxWidth: '480px',
+              }}>
+                {item.desc}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
+
+      <style>{`
+        .iniciativa-row:hover .row-num { color: rgba(168,62,35,0.55) !important; }
+        .iniciativa-row:hover .row-title { color: #A83E23 !important; }
+      `}</style>
     </section>
   );
 }

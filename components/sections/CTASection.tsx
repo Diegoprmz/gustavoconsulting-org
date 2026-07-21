@@ -16,31 +16,34 @@ export default function CTASection() {
   };
 
   return (
-    <section id="contacto" style={{ background: '#3D6B50', padding: '120px 0' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 40px' }} ref={ref}>
-        <div className="grid md:grid-cols-2 gap-16 md:gap-24 items-center">
+    <section id="contacto" style={{ background: '#A83E23', padding: '120px 0' }}>
+      <div className="px-6 md:px-20" style={{ maxWidth: '1200px', margin: '0 auto' }} ref={ref}>
+        <div className="grid md:grid-cols-2 gap-16 md:gap-28 items-center">
 
           {/* Left — headline */}
           <motion.div
-            initial={{ opacity: 0, x: -32 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 0.8 }}
           >
-            <p style={{ fontFamily: 'var(--font-inter)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'rgba(248,244,238,0.6)', marginBottom: '24px' }}>
-              Únete a la misión
-            </p>
-            <h2 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 700, color: '#F8F4EE', lineHeight: 1.1 }}>
+            <h2 style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: 'clamp(36px, 4.5vw, 64px)',
+              fontWeight: 500,
+              color: '#F1E9DA',
+              lineHeight: 1.05,
+              letterSpacing: '-0.02em',
+            }}>
               Únete a la misión<br />
-              de educar y{' '}
-              <em style={{ color: '#F8F4EE', fontStyle: 'italic', fontWeight: 400 }}>liderar</em><br />
+              de educar y liderar<br />
               para el bien común
             </h2>
           </motion.div>
 
           {/* Right — form */}
           <motion.div
-            initial={{ opacity: 0, x: 32 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.15 }}
           >
             {!sent ? (
@@ -55,63 +58,75 @@ export default function CTASection() {
                     aria-label="Correo electrónico"
                     style={{
                       flex: 1,
-                      padding: '15px 20px',
-                      background: 'rgba(248,244,238,0.12)',
-                      border: '1px solid rgba(248,244,238,0.25)',
+                      padding: '14px 20px',
+                      background: 'rgba(241,233,218,0.1)',
+                      border: '1px solid rgba(241,233,218,0.2)',
                       borderRight: 'none',
-                      color: '#F8F4EE',
+                      color: '#F1E9DA',
                       fontFamily: 'var(--font-inter)',
                       fontSize: '13px',
+                      fontWeight: 300,
                       outline: 'none',
                     }}
                   />
                   <button
                     type="submit"
                     style={{
-                      padding: '15px 28px',
-                      background: '#C4922A',
+                      padding: '14px 28px',
+                      background: '#211A14',
                       border: 'none',
-                      color: '#fff',
+                      color: '#F1E9DA',
                       fontFamily: 'var(--font-inter)',
-                      fontSize: '12px',
+                      fontSize: '11px',
                       fontWeight: 600,
-                      letterSpacing: '0.1em',
+                      letterSpacing: '0.15em',
                       textTransform: 'uppercase',
                       cursor: 'pointer',
-                      transition: 'background 0.2s',
+                      transition: 'opacity 0.2s',
                       flexShrink: 0,
                     }}
-                    onMouseEnter={e => (e.currentTarget.style.background = '#D4A843')}
-                    onMouseLeave={e => (e.currentTarget.style.background = '#C4922A')}
+                    onMouseEnter={e => (e.currentTarget.style.opacity = '0.75')}
+                    onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
                   >
                     Suscribirme
                   </button>
                 </form>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', margin: '24px 0' }}>
-                  <div style={{ flex: 1, height: '1px', background: 'rgba(248,244,238,0.2)' }} />
-                  <span style={{ fontFamily: 'var(--font-inter)', fontSize: '11px', color: 'rgba(248,244,238,0.4)', letterSpacing: '0.1em' }}>o</span>
-                  <div style={{ flex: 1, height: '1px', background: 'rgba(248,244,238,0.2)' }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', margin: '20px 0' }}>
+                  <div style={{ flex: 1, height: '1px', background: 'rgba(241,233,218,0.15)' }} />
+                  <span style={{ fontFamily: 'var(--font-inter)', fontSize: '10px', color: 'rgba(241,233,218,0.3)', letterSpacing: '0.1em' }}>o</span>
+                  <div style={{ flex: 1, height: '1px', background: 'rgba(241,233,218,0.15)' }} />
                 </div>
 
                 <a
                   href="mailto:contacto@gustavo.consulting"
-                  className="btn-ghost-white"
-                  style={{ textDecoration: 'none', display: 'block', textAlign: 'center' }}
+                  style={{
+                    display: 'block',
+                    textAlign: 'center',
+                    fontFamily: 'var(--font-inter)',
+                    fontSize: '12px',
+                    fontWeight: 400,
+                    letterSpacing: '0.06em',
+                    color: 'rgba(241,233,218,0.55)',
+                    textDecoration: 'none',
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#F1E9DA')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(241,233,218,0.55)')}
                 >
                   Agenda una conversación →
                 </a>
               </>
             ) : (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
-                style={{ padding: '40px', border: '1px solid rgba(248,244,238,0.2)', textAlign: 'center' }}
+                style={{ padding: '40px 0' }}
               >
-                <p style={{ fontFamily: 'var(--font-playfair)', fontSize: '22px', fontStyle: 'italic', color: '#F8F4EE', marginBottom: '8px' }}>
+                <p style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: '24px', color: '#F1E9DA', marginBottom: '8px' }}>
                   ¡Gracias por sumarte!
                 </p>
-                <p style={{ fontFamily: 'var(--font-inter)', fontSize: '13px', color: 'rgba(248,244,238,0.6)' }}>
+                <p style={{ fontFamily: 'var(--font-inter)', fontSize: '13px', fontWeight: 300, color: 'rgba(241,233,218,0.55)' }}>
                   Pronto estarás en contacto con la fundación.
                 </p>
               </motion.div>

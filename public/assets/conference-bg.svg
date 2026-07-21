@@ -1,0 +1,44 @@
+<svg width="1920" height="1400" viewBox="0 0 1920 1400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgBase" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0A1220" />
+      <stop offset="55%" stop-color="#0F1C36" />
+      <stop offset="100%" stop-color="#070C16" />
+    </linearGradient>
+    <radialGradient id="spotlight" cx="50%" cy="18%" r="55%">
+      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.22" />
+      <stop offset="45%" stop-color="#C9A84C" stop-opacity="0.06" />
+      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#070C16" stop-opacity="0" />
+      <stop offset="100%" stop-color="#070C16" stop-opacity="0.55" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1400" fill="url(#bgBase)" />
+  <rect width="1920" height="1400" fill="url(#spotlight)" />
+
+  <!-- abstract auditorium rows, receding toward a vanishing point -->
+  <g opacity="0.35" stroke="#F5F5F5" stroke-opacity="0.06">
+    <path d="M -200 1400 L 960 760 L 2120 1400" fill="none" />
+    <path d="M -100 1400 L 960 800 L 2020 1400" fill="none" />
+    <path d="M 0 1400 L 960 840 L 1920 1400" fill="none" />
+    <path d="M 100 1400 L 960 880 L 1820 1400" fill="none" />
+    <path d="M 200 1400 L 960 920 L 1720 1400" fill="none" />
+    <path d="M 300 1400 L 960 960 L 1620 1400" fill="none" />
+    <path d="M 400 1400 L 960 1000 L 1520 1400" fill="none" />
+    <path d="M 500 1400 L 960 1040 L 1420 1400" fill="none" />
+  </g>
+
+  <!-- faint seat-row bands -->
+  <g fill="#F5F5F5" opacity="0.025">
+    <rect x="0" y="980" width="1920" height="18" />
+    <rect x="0" y="1050" width="1920" height="22" />
+    <rect x="0" y="1130" width="1920" height="26" />
+    <rect x="0" y="1220" width="1920" height="32" />
+    <rect x="0" y="1320" width="1920" height="40" />
+  </g>
+
+  <rect width="1920" height="1400" fill="url(#fade)" />
+</svg>

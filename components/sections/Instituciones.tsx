@@ -2,12 +2,29 @@
 
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import LogoCarousel, { type LogoItem } from '@/components/ui/LogoCarousel';
 
-const chips = [
-  'Anáhuac', 'EGADE', 'ITAM', 'Ibero', 'La Salle',
-  'UNAM', 'Tec de Monterrey', 'UNITEC', 'UVM', 'UFM',
-  'UAB', 'USIL', 'UNMSM', 'UIC', 'EPG',
-  'HSBC', 'Ford', 'Coppel', 'ADO', 'Alimas', 'Fandeli',
+// Only institutions with a confirmed real logo — the rest (EGADE, UFM, UAB, UIC, EPG)
+// come back in once their official marks are sourced.
+const logos: LogoItem[] = [
+  { name: 'Anáhuac', src: '/assets/logos/anahuac.svg' },
+  { name: 'ITAM', src: '/assets/logos/itam.svg' },
+  { name: 'Ibero', src: '/assets/logos/ibero.svg' },
+  { name: 'La Salle', src: '/assets/logos/la-salle.svg' },
+  { name: 'UNAM', src: '/assets/logos/unam.svg' },
+  { name: 'Tec de Monterrey', src: '/assets/logos/tec-monterrey.svg' },
+  { name: 'UNITEC', src: '/assets/logos/unitec.png' },
+  { name: 'UVM', src: '/assets/logos/uvm.svg' },
+  { name: 'USIL', src: '/assets/logos/usil.jpg' },
+  { name: 'UNMSM', src: '/assets/logos/unmsm.svg' },
+  { name: 'HSBC', src: '/assets/logos/hsbc.svg' },
+  { name: 'Ford', src: '/assets/logos/ford.svg' },
+  { name: 'Coppel', src: '/assets/logos/coppel.svg' },
+  { name: 'ADO', src: '/assets/logos/ado.svg' },
+  // Background removed with Python/Pillow from the gustavo-consulting-cms source assets —
+  // no clean vector version of either exists on Commons.
+  { name: 'Fandeli', src: '/assets/logos/fandeli.png' },
+  { name: 'Alimás', src: '/assets/logos/alimas.png' },
 ];
 
 export default function Instituciones() {
@@ -15,51 +32,32 @@ export default function Instituciones() {
   const inView = useInView(ref, { once: true, margin: '-60px' });
 
   return (
-    <section style={{ background: '#1B2A4A', padding: '80px 0' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 40px' }} ref={ref}>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
+    <section style={{ background: '#211A14', padding: '80px 0' }}>
+      <div className="px-6 md:px-20" style={{ maxWidth: '1200px', margin: '0 auto' }} ref={ref}>
+        <motion.h2
+          initial={{ opacity: 0, y: 10 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          style={{ fontFamily: 'var(--font-inter)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '28px' }}
+          transition={{ duration: 0.7 }}
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: 'clamp(26px, 3vw, 40px)',
+            fontWeight: 600,
+            color: '#F1E9DA',
+            letterSpacing: '-0.015em',
+            marginBottom: '40px',
+          }}
         >
           Instituciones y empresas donde ha colaborado
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="inst-strip"
-        >
-          {chips.map((chip, i) => (
-            <motion.span
-              key={chip}
-              initial={{ opacity: 0, y: 12 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4, delay: 0.15 + i * 0.04 }}
-              style={{
-                flexShrink: 0,
-                fontFamily: 'var(--font-inter)',
-                fontSize: '11px',
-                fontWeight: 500,
-                letterSpacing: '0.08em',
-                color: 'rgba(255,255,255,0.6)',
-                border: '1px solid rgba(255,255,255,0.12)',
-                borderRadius: '2px',
-                padding: '8px 16px',
-                whiteSpace: 'nowrap',
-                transition: 'border-color 0.2s, color 0.2s',
-                cursor: 'default',
-              }}
-              whileHover={{ borderColor: 'rgba(196,146,42,0.5)', color: '#C4922A' }}
-            >
-              {chip}
-            </motion.span>
-          ))}
-        </motion.div>
+        </motion.h2>
       </div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.9, delay: 0.15 }}
+      >
+        <LogoCarousel items={logos} />
+      </motion.div>
     </section>
   );
 }

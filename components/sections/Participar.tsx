@@ -29,59 +29,109 @@ export default function Participar() {
   const inView = useInView(ref, { once: true, margin: '-60px' });
 
   return (
-    <section style={{ background: '#F8F4EE', padding: '120px 0' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 40px' }} ref={ref}>
+    <section style={{ background: '#F1E9DA', padding: '120px 0' }}>
+      <div className="px-6 md:px-20" style={{ maxWidth: '1200px', margin: '0 auto' }} ref={ref}>
 
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
-          style={{ marginBottom: '64px' }}
+        <motion.h2
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.8 }}
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: 'clamp(40px, 5vw, 72px)',
+            fontWeight: 500,
+            color: '#211A14',
+            lineHeight: 1.02,
+            letterSpacing: '-0.025em',
+            marginBottom: '72px',
+            maxWidth: '560px',
+          }}
         >
-          <p style={{ fontFamily: 'var(--font-inter)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.24em', textTransform: 'uppercase', color: '#C4922A', marginBottom: '14px' }}>
-            Cómo sumarse
-          </p>
-          <h2 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(30px, 4vw, 48px)', fontWeight: 700, color: '#1B2A4A', lineHeight: 1.2, maxWidth: '480px' }}>
-            Tres formas de sumarse a la misión
-          </h2>
-        </motion.div>
+          Tres formas de sumarse a la misión
+        </motion.h2>
 
-        <div className="grid md:grid-cols-3 gap-0" style={{ border: '1px solid rgba(27,42,74,0.12)' }}>
-          {ways.map((w, i) => (
-            <motion.div
-              key={w.num}
-              initial={{ opacity: 0, y: 32 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: i * 0.12 }}
-              style={{
-                padding: '44px 36px',
-                borderRight: i < 2 ? '1px solid rgba(27,42,74,0.12)' : 'none',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              {/* Ghost number */}
-              <span style={{
-                position: 'absolute', top: '-8px', right: '12px',
-                fontFamily: 'var(--font-playfair)', fontSize: '100px', fontWeight: 800,
-                color: 'rgba(27,42,74,0.04)', lineHeight: 1, userSelect: 'none', pointerEvents: 'none',
+        {/* Editorial horizontal rows — no card boxes */}
+        {ways.map((w, i) => (
+          <motion.div
+            key={w.num}
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.6, delay: i * 0.1 }}
+            className="participar-row grid grid-cols-1 md:grid-cols-[120px_1fr_28px] gap-3 md:gap-10 items-start md:items-center"
+            style={{
+              padding: '36px 0',
+              borderTop: '1px solid rgba(33,26,20,0.14)',
+              borderBottom: i === ways.length - 1 ? '1px solid rgba(33,26,20,0.14)' : 'none',
+              cursor: 'default',
+              transition: 'padding-left 0.35s cubic-bezier(0.65,0,0.35,1)',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.paddingLeft = '16px'; }}
+            onMouseLeave={e => { e.currentTarget.style.paddingLeft = '0px'; }}
+          >
+            <div className="flex md:block gap-3">
+              <p style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '11px',
+                fontWeight: 700,
+                letterSpacing: '0.14em',
+                color: '#A83E23',
+                marginBottom: '6px',
               }}>
                 {w.num}
-              </span>
-
-              <p style={{ fontFamily: 'var(--font-inter)', fontSize: '9px', fontWeight: 700, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#C4922A', marginBottom: '12px' }}>
-                {w.num}&nbsp;&nbsp;{w.label}
               </p>
-              <h3 style={{ fontFamily: 'var(--font-playfair)', fontSize: '22px', fontWeight: 600, color: '#1B2A4A', lineHeight: 1.3, marginBottom: '16px' }}>
+              <p style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '11px',
+                fontWeight: 600,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: 'rgba(33,26,20,0.62)',
+              }}>
+                {w.label}
+              </p>
+            </div>
+
+            <div>
+              <h3 className="participar-title" style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 'clamp(22px, 2.4vw, 32px)',
+                fontWeight: 600,
+                color: '#211A14',
+                marginBottom: '10px',
+                lineHeight: 1.15,
+                transition: 'color 0.3s',
+              }}>
                 {w.title}
               </h3>
-              <p style={{ fontFamily: 'var(--font-inter)', fontSize: '14px', fontWeight: 300, lineHeight: 1.8, color: 'rgba(44,44,44,0.65)' }}>
+              <p style={{
+                fontFamily: 'var(--font-inter)',
+                fontSize: '16px',
+                fontWeight: 400,
+                lineHeight: 1.7,
+                color: 'rgba(33,26,20,0.75)',
+                maxWidth: '560px',
+              }}>
                 {w.desc}
               </p>
-            </motion.div>
-          ))}
-        </div>
+            </div>
+
+            <span className="participar-arrow hidden md:inline-block" style={{
+              fontFamily: 'var(--font-inter)',
+              fontSize: '20px',
+              color: 'rgba(33,26,20,0.4)',
+              justifySelf: 'end',
+              transition: 'transform 0.3s, color 0.3s',
+            }}>
+              →
+            </span>
+          </motion.div>
+        ))}
       </div>
+
+      <style>{`
+        .participar-row:hover .participar-title { color: #A83E23; }
+        .participar-row:hover .participar-arrow { color: #A83E23; transform: translateX(4px); }
+      `}</style>
     </section>
   );
 }
